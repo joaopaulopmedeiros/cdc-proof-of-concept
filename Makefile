@@ -1,6 +1,6 @@
 COMPOSE_FILE=./compose.yaml
 
-.PHONY: up connector console-consumer down
+.PHONY: up connector console-consumer bucket down
 
 up:
 	@echo "Starting Docker Compose..."
@@ -18,6 +18,10 @@ console-consumer:
 	--bootstrap-server kafka:9092 \
 	--topic salesdb.public.sales \
 	--from-beginning
+
+bucket:
+	@echo "Creating S3 bucket..."
+	aws --endpoint-url=http://localhost:4566 s3 mb s3://datalake
 
 down:
 	@echo "Stopping Docker Compose..."
