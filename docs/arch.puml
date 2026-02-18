@@ -1,0 +1,33 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_LEFT_RIGHT()
+
+title C4 - CDC Architecture
+
+Person(user, "User", "Changes sales data")
+
+System_Boundary(system, "Streaming Data Platform") {
+
+    ContainerDb(postgres, "PostgreSQL", "Database", "Operational sales database")
+
+    Container(debezium, "Debezium Connector", "Kafka Connect", "Captures CDC events from PostgreSQL WAL")
+
+    Container(kafka, "Kafka Broker", "Apache Kafka", "Event streaming platform")
+
+    Container(spark, "Spark Structured Streaming", "Apache Spark", "Consumes Kafka and processes micro-batches")
+
+    Container(delta, "Delta Lake (Bronze)", "Delta Format", "ACID table storage layer")
+
+    Container(s3, "Object Storage", "S3 (LocalStack)", "Stores parquet files and _delta_log")
+}
+
+Rel(user, postgres, "INSERT / UPDATE / DELETE")
+Rel(postgres, debezium, "WAL (CDC)")
+Rel(debezium, kafka, "Publishes events to topic: salesdb.public.sales")
+Rel(kafka, spark, "Consumes stream")
+Rel(spark, delta, "Writes micro-batches")
+Rel(delta, s3, "Stores parquet + transaction log")
+
+@enduml
