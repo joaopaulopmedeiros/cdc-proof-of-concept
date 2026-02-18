@@ -5,10 +5,9 @@
     "database.user": "postgres",
     "database.password": "postgres",
     "database.dbname": "salesdb",
-    "database.server.name": "sales_server",
     "plugin.name": "pgoutput",
     "slot.name": "sales_slot",
     "publication.autocreate.mode": "filtered",
     "table.include.list": "public.sales",
-    "topic.prefix": "sales"
+    "topic.prefix": "salesdb"
 }

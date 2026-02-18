@@ -14,4 +14,4 @@ connector:
 
 down:
 	@echo "Stopping Docker Compose..."
-	docker compose -f $(COMPOSE_FILE) down --volumes --rmi all
+	docker compose -f $(COMPOSE_FILE) down --volumes
