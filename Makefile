@@ -1,6 +1,6 @@
 COMPOSE_FILE=./compose.yaml
 
-.PHONY: up down
+.PHONY: up connector console-consumer down
 
 up:
 	@echo "Starting Docker Compose..."
@@ -11,6 +11,13 @@ connector:
 	curl -X PUT http://localhost:8083/connectors/sales-connector/config \
 		-H "Content-Type: application/json" \
 		-d @./connectors/sales-connector.json
+
+console-consumer:
+	@echo "Starting Kafka Console Consumer..."
+	docker exec -it kafka kafka-console-consumer \
+	--bootstrap-server kafka:9092 \
+	--topic salesdb.public.sales \
+	--from-beginning
 
 down:
 	@echo "Stopping Docker Compose..."
